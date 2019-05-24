@@ -20,6 +20,7 @@ App mobile ECN
     3.Equake map: integrated mapbox with information of equake
     4.Safety screen: Created expander to expand text and TermsAndConditions for information
     5.Historical Backlog
+    6.Earthquake details screen
     
   ### Architecture
     1.Screens locates in **screens** folder
