@@ -64,6 +64,7 @@ export default class HistoricalEarthquakesScreen extends React.Component {
                     ItemSeparatorComponent={this.FlatListItemSeparator}
                     data={data}
                     renderItem={({ item }) => <EarthquakeInfo Magnitude={item.Magnitude} Depth={item.Depth} Location={item.Location} Time={item.Time} />}
+                    keyExtractor={(item, index) => index.toString()}
                 />
             </View>)
     }

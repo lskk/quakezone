@@ -89,7 +89,7 @@ export default class EQuakeMapScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-          <MenuSearchComponent />
+          <MenuSearchComponent onMenuClick={() => this.props.navigation.toggleDrawer()} />
         </View>
         <View style={{ width: "100%", height: "7%", flexDirection: 'row' }}>
           <TouchableOpacity

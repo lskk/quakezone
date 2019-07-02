@@ -2,6 +2,7 @@ import React from "react";
 import Ionicons from "react-native-ionicons"
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-ionicons";
+import { Button } from "react-native-elements";
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ export default class HomeScreen extends React.Component {
         return (
             <View>
                 <View style={styles.Fourty}>
+                    <Button onPress={() => this.props.navigation.toggleDrawer()} title="Menu"/>
                     <Image source={require("../assets/STORMY.jpg")} style={{ width: "100%", height: "100%" }} />
                     <View style={styles.overlayFirst}>
                         <View style={styles.TempWeather}>
@@ -76,7 +78,7 @@ export default class HomeScreen extends React.Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',width:"80%"}}>
-                                <Text>22km NNE of Hualian, Taiwan</Text>
+                                <Text>22km NNE of Cilacap, Jawa Tengah</Text>
                             </View>
                         </View>
                     </View>
@@ -94,7 +96,7 @@ export default class HomeScreen extends React.Component {
                             <View style={{ width: "50%", flexDirection: "row", margin: 6 }}>
                                 <Ionicons name="wifi" size={45} />
                                 <View style={{marginLeft:3}}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Deepth</Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Depth</Text>
                                     <Text>10 Km</Text>
                                 </View>
                             </View>

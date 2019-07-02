@@ -6,7 +6,7 @@
  * @flow
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
-import AppNavigator from './navigations/AppNaviagtor'
+import AppNavigator from './navigations/AppNavigator'
 import React, { Component } from 'react';
 import { Platform, StyleSheet, StatusBar, Text, View } from 'react-native';
 
