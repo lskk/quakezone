@@ -6,7 +6,7 @@
  * @flow
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
-import AppNavigator from '../EQuake/navigations/AppNaviagtor'
+import AppNavigator from './navigations/AppNaviagtor'
 import React, { Component } from 'react';
 import { Platform, StyleSheet, StatusBar, Text, View } from 'react-native';
 
