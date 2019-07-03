@@ -104,66 +104,6 @@ const data = [
       {
         Suggestion: "",
         SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
-      },
-      {
-        Suggestion: "",
-        SubSuggestion: []
       }
     ]
   },
@@ -277,6 +217,7 @@ class Expander extends React.Component {
       Text: props.Text
     };
   }
+
   renderText() {
     if (this.state.IsSelected) {
       return (
@@ -352,19 +293,20 @@ class TermsAndConditions extends React.Component {
   constructor(props) {
     super(props);
   }
+
   renderText(Sections) {
     const items = [];
     for (let i = 0; i < Sections.length; i++) {
       const Section = Sections[i];
       items.push(
-        <Text style={stylesT.tcL}>
+        <Text key={`section_${i}`} style={stylesT.tcL}>
           {"\u2022"} {Section.Suggestion}
         </Text>
       );
       for (let j = 0; j < Section.SubSuggestion.length; j++) {
         const SubSuggestion = Section.SubSuggestion[j];
         items.push(
-          <Text style={stylesT.tcLX}>
+          <Text key={`subsection_${i}_${j}`} style={stylesT.tcLX}>
             {chars[j]}. {SubSuggestion}
           </Text>
         );
@@ -372,6 +314,7 @@ class TermsAndConditions extends React.Component {
     }
     return items;
   }
+
   render() {
     return (
       <View style={stylesT.container}>

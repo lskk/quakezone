@@ -10,7 +10,9 @@ export default class EarthquakeDetailsScreen extends React.Component {
   render() {
     return (
       <View>
-        <MenuSearchComponent />
+        <MenuSearchComponent
+          onMenuClick={() => this.props.navigation.toggleDrawer()}
+        />
         <View style={styles.container}>
           <Text
             style={{
