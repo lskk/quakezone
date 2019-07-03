@@ -13,7 +13,20 @@ import HistoricalEquake from "../screens/HistoricalEarthquakesScreen";
 import EarthquakeDetailsScreen from "../screens/EarthquakeDetailsScreen";
 import SafetyScreen from "../screens/SafetyScreen";
 import Icon from "react-native-ionicons";
+import SensorScreen from "../screens/SensorScreen";
 // Importing navigations
+
+const HomeNavigation = createBottomTabNavigator({
+  Home: HomeScreen
+});
+
+HomeNavigation.navigationOptions = {
+  drawerLabel: "Home",
+  drawerIcon: ({ focused, tintColor }) => {
+    const iconName = `home`;
+    return <Ionicons name={iconName} size={25} color={tintColor} />;
+  }
+};
 
 const EarthquakeDetails = createBottomTabNavigator({
   Home: EarthquakeDetailsScreen
@@ -34,7 +47,7 @@ const EarthquakeMapStack = createBottomTabNavigator({
 EarthquakeMapStack.navigationOptions = {
   drawerLabel: "Earthquake Map",
   drawerIcon: ({ focused, tintColor }) => {
-    const iconName = `wifi`;
+    const iconName = `map`;
     return <Ionicons name={iconName} size={25} color={tintColor} />;
   }
 };
@@ -46,7 +59,7 @@ const HistoricalEquakeStack = createBottomTabNavigator({
 HistoricalEquakeStack.navigationOptions = {
   drawerLabel: "Historical Earthquakes",
   drawerIcon: ({ focused, tintColor }) => {
-    const iconName = `archive`;
+    const iconName = `filing`;
     return <Ionicons name={iconName} size={25} color={tintColor} />;
   }
 };
@@ -63,14 +76,14 @@ SafeNavigation.navigationOptions = {
   }
 };
 
-const HomeNavigation = createBottomTabNavigator({
-  Home: HomeScreen
+const SensorNavigation = createBottomTabNavigator({
+  Sensor: SensorScreen
 });
 
-HomeNavigation.navigationOptions = {
-  drawerLabel: "Home",
+SensorNavigation.navigationOptions = {
+  drawerLabel: "Sensor",
   drawerIcon: ({ focused, tintColor }) => {
-    const iconName = `medkit`;
+    const iconName = "wifi";
     return <Ionicons name={iconName} size={25} color={tintColor} />;
   }
 };
@@ -102,7 +115,8 @@ const TabScreens = createDrawerNavigator(
     Safety: SafeNavigation,
     EquakeMap: EarthquakeMapStack,
     HEquake: HistoricalEquakeStack,
-    Detail: EarthquakeDetails
+    Detail: EarthquakeDetails,
+    Sensor: SensorNavigation,
   },
   {
     contentComponent: CustomDrawerComponent
