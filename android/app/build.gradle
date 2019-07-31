@@ -138,9 +138,9 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-sensors')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-svg')
+    implementation project(':react-native-sensors')
     implementation project(':react-native-gesture-handler')
     implementation project(':@mapbox_react-native-mapbox-gl')
     implementation fileTree(dir: "libs", include: ["*.jar"])
