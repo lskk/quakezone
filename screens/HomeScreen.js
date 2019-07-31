@@ -1,11 +1,14 @@
 import React from "react";
 import Ionicons from "react-native-ionicons";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ScrollView } from "react-native";
 import Icon from "react-native-ionicons";
 import { Button } from "react-native-elements";
 import MenuSearchComponent from "../components/MenuSearchComponent";
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+		header: null
+	};
   constructor(props) {
     super(props);
     this.state = {
@@ -34,14 +37,22 @@ export default class HomeScreen extends React.Component {
   //}
 
   render() {
+
+    console.log('asdadasd');
     return (
-      <View>
-        <MenuSearchComponent
+      // <ScrollView style={{height:'100%'}} contentContainerStyle={{flexGrow:1}}>
+      <View style={styles.wraps}>
+      
+      
+        {Platform.OS !== 'ios' && (
+          <MenuSearchComponent
           onMenuClick={() => {
             this.props.navigation.toggleDrawer();
           }}
         />
-
+        )}
+        
+        
         <View style={styles.Fourty}>
           <Image
             source={require("../assets/STORMY.jpg")}
@@ -53,7 +64,7 @@ export default class HomeScreen extends React.Component {
                 source={require("../assets/rain.png")}
                 style={{ marginBottom: 7, height: "50%", width: "50%" }}
               />
-              <Text style={styles.TempText}>20 C</Text>
+              <Text style={styles.TempText}>20º C</Text>
             </View>
 
             <View style={{ alignSelf: "flex-end", width: "45%" }}>
@@ -70,86 +81,100 @@ export default class HomeScreen extends React.Component {
           <View style={styles.overlayMiddle}>
             <View style={styles.InnerMiddle}>
               <Text style={styles.MiddleText}>
-                Tectonik earthquae just happened 5M{" "}
+                Tectonic earthquae just happened 5M, in the city of Solok{" "}
               </Text>
 
               <View style={styles.TextRaw}>
-                <Text style={styles.MiddleText}>Time : a</Text>
-                <Text style={styles.MiddleText}>Magnitude : b</Text>
+                <Text style={styles.MiddleText}>Time : a{' '}</Text>
+                <Text style={styles.MiddleText}>Magnitude : b{' '}</Text>
                 <Text style={styles.MiddleText}>Depth : C</Text>
               </View>
             </View>
           </View>
         </View>
 
-        <View style={styles.Fourty}>
-          <View style={styles.BottomFirst}>
-            <View style={styles.container}>
-              <View style={{ width: "20%", height: "100%", margin: 15 }}>
-                <TouchableOpacity style={styles.ButtonStyle}>
-                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>6.1</Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "80%"
-                }}
-              >
-                <Text>22km NNE of Cilacap, Jawa Tengah</Text>
-              </View>
-            </View>
+        <View style={styles.overlay}>
+
+          {/* Warning Notification */}
+          <View style={styles.redWarning}>
+            <Text style={styles.textWarning}>Earthquake Early Warning : Padang</Text>
           </View>
+          {/* End Warning Notification */}
+          
+          <Image
+            source={require("../assets/kolkata-map.jpg")}
+            style={{ width: "100%", height: "100%" }}
+          />
 
-          <View style={styles.BottomSecond}>
-            <View style={styles.BottomSecondInner}>
-              <View style={{ width: "50%", flexDirection: "row", margin: 6 }}>
-                <Ionicons name="time" size={45} />
-                <View style={{ marginLeft: 3 }}>
-                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>Time</Text>
-                  <Text>Mar 01 18:35</Text>
-                </View>
+            <View style={styles.firstRow}>
+              <View style={styles.firstLayer}>
+                <Text style={styles.textStyle}>1 Hari yang Lalu</Text>
+                <Text style={styles.textEpicenter}>1 Mar 2019</Text>
+                <Text style={styles.textStyle}>08:35:51 WIB</Text>
               </View>
 
-              <View style={{ width: "50%", flexDirection: "row", margin: 6 }}>
-                <Ionicons name="wifi" size={45} />
-                <View style={{ marginLeft: 3 }}>
-                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                    Depth
-                  </Text>
-                  <Text>10 Km</Text>
-                </View>
+              <View style={styles.firstLayerMiddle}>
+                {/*this.DrawSeparator("first",true,)*/}
               </View>
+
+              <View style={styles.firstLayer}>
+                <Text style={styles.textStyle}>
+                  <Ionicons
+                    size={40}
+                    name="pulse"
+                    color="red"
+                  />
+                </Text>
+                <Text style={styles.textEpicenter}>2.9</Text>
+                <Text style={styles.textStyle}>Magnitudo</Text>
+              </View>
+
+              <View style={styles.firstLayerMiddle} />
+                {/*this.DrawSeparator("first",true,)*/}
+
+              <View style={styles.firstLayer}>
+                <Text style={styles.textStyle}>
+                <Ionicons size={40} name="wifi" color="green" />
+                </Text>
+                <Text style={styles.textEpicenter}>10 KM</Text>
+                <Text style={styles.textStyle}>Kedalaman</Text>
+              </View>
+              {/* </View> */}
+
             </View>
-            <View style={styles.BottomSecondInner}>
-              <View style={{ width: "50%", flexDirection: "row", margin: 6 }}>
-                <Ionicons name="pin" size={45} />
-                <View style={{ marginLeft: 3 }}>
-                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                    Location
-                  </Text>
-                  <Text>24.175 N ,121.708 E</Text>
-                </View>
+
+            <View style={styles.secondRow}>
+              <View style={styles.secondLayer}>
+                <Ionicons size={20} name="locate" color="yellow" />
+                <Text style={styles.bottomText}>
+                Pusat Gempa berada di darat laut 11 KM timur laut Lombok Tengah</Text>
               </View>
 
-              <View style={{ width: "50%", flexDirection: "row", margin: 6 }}>
-                <Ionicons name="stats" size={45} />
-                <View style={{ marginLeft: 3 }}>
-                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>MMI</Text>
-                  <Text>|| Lombok Tengah</Text>
-                </View>
+              <View style={styles.secondLayerMiddle}/>
+
+              <View style={styles.secondLayer}>
+              <Ionicons size={20} name="wifi" color="yellow" />
+                <Text style={styles.bottomText}>Dirasakan (MMI): {'\n'}III Lombok Tengah</Text>
               </View>
+
             </View>
-          </View>
+
         </View>
+      
       </View>
+      // </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  wraps: {
+    flex:1,
+    // justifyContent: 'space-around',
+    // alignItems: 'center',
+    height:'100%',
+    width:'100%'
+  },
   container: {
     flexDirection: "row",
     height: "100%",
@@ -215,7 +240,9 @@ const styles = StyleSheet.create({
   },
   Fourty: {
     width: "100%",
-    height: "40%"
+    height: '40%',
+    position:'relative'
+    // height: 200
   },
   Twenty: {
     width: "100%",
@@ -230,7 +257,7 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   overlayMiddle: {
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: "rgba(0,0,0,0.5)",
     height: "100%",
     width: "100%",
     position: "absolute"
@@ -247,7 +274,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     position: "absolute",
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: "rgba(0,0,0,0.5)",
     bottom: 0
   },
   bottom: {
@@ -275,5 +302,97 @@ const styles = StyleSheet.create({
   TextRaw: {
     marginTop: 4,
     flexDirection: "row"
+  },
+  // overlay: {
+  //   width: '100%',
+  //   height:'auto',
+  //   position: 'absolute',
+  //   backgroundColor: 'rgba(0,0,0,0.3)',
+  //   bottom: 0
+  // },
+
+  firstRow: {
+    flexDirection: 'row',
+    height: "30%",
+    width: "100%",
+    position:'absolute',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    top:0,
+    borderBottomWidth: 1,
+    borderColor:'#FFF',
+    // paddingBottom:1
+  },
+  secondRow: {
+    flexDirection: 'row',
+    height: "10%",
+    width: "100%",
+    position:'absolute',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    top:'30%',
+    paddingTop:'1%'
+  },
+  firstLayer: {
+    paddingTop:'23%',
+    height: "100%",
+    width: "32%"
+  },
+  secondLayer: {
+    // paddingTop:'30%',
+    flexDirection: "row",
+    height: "100%",
+    width: "45%",
+    paddingLeft:20,
+    flex:1,
+    alignItems: 'center',
+    justifyContent:'center'
+  },
+  textStyle: {
+    paddingTop: 6,
+    textAlign: 'center',
+    color: "#ffffff",
+    fontSize: 13,
+    // fontWeight: 'bold'
+  },
+  bottomText: {
+    padding: 6,
+    color: "#ffffff",
+    fontSize: 13,
+  },
+  firstLayerMiddle:
+  {
+    marginTop: '20%',
+    borderLeftWidth: 1,
+    borderColor: '#FFF',
+    height: "50%",
+    width: "1%"
+  },
+  secondLayerMiddle: {
+    top:'2%',
+    borderLeftWidth: 1,
+    borderColor: '#FFF',
+    marginLeft:30,
+    height: "90%",
+    width: "1%"
+  },
+  textEpicenter: {
+    paddingTop: 6,
+    textAlign: 'center',
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+
+  redWarning: {
+    width:'100%',
+    height:'auto',
+    padding:6,
+    position:'absolute',
+    backgroundColor:'#E55E5E',
+    top:0,
+    zIndex: 5
+  },
+  textWarning: {
+    fontSize:20,
+    fontWeight:'bold'
   }
 });

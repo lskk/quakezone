@@ -2,10 +2,11 @@ import React from "react";
 import Ionicons from "react-native-ionicons";
 import {
   createDrawerNavigator,
-  createBottomTabNavigator,
-  DrawerItems
+  createStackNavigator,
+  DrawerItems,
+  createBottomTabNavigator
 } from "react-navigation";
-import { Text, View, SafeAreaView, ScrollView, Image } from "react-native";
+import { Text, View, SafeAreaView, ScrollView, Image, Platform } from "react-native";
 
 import HomeScreen from "../screens/HomeScreen";
 import EQuakeMapScreen from "../screens/EQuakeMapScreen";
@@ -16,7 +17,7 @@ import Icon from "react-native-ionicons";
 import SensorScreen from "../screens/SensorScreen";
 // Importing navigations
 
-const HomeNavigation = createBottomTabNavigator({
+const HomeNavigation = createStackNavigator({
   Home: HomeScreen
 });
 
@@ -28,7 +29,7 @@ HomeNavigation.navigationOptions = {
   }
 };
 
-const EarthquakeDetails = createBottomTabNavigator({
+const EarthquakeDetails = createStackNavigator({
   Home: EarthquakeDetailsScreen
 });
 
@@ -40,7 +41,7 @@ EarthquakeDetails.navigationOptions = {
   }
 };
 
-const EarthquakeMapStack = createBottomTabNavigator({
+const EarthquakeMapStack = createStackNavigator({
   Home: EQuakeMapScreen
 });
 
@@ -52,7 +53,7 @@ EarthquakeMapStack.navigationOptions = {
   }
 };
 
-const HistoricalEquakeStack = createBottomTabNavigator({
+const HistoricalEquakeStack = createStackNavigator({
   Home: HistoricalEquake
 });
 
@@ -64,7 +65,7 @@ HistoricalEquakeStack.navigationOptions = {
   }
 };
 
-const SafeNavigation = createBottomTabNavigator({
+const SafeNavigation = createStackNavigator({
   Home: SafetyScreen
 });
 
@@ -76,7 +77,7 @@ SafeNavigation.navigationOptions = {
   }
 };
 
-const SensorNavigation = createBottomTabNavigator({
+const SensorNavigation = createStackNavigator({
   Sensor: SensorScreen
 });
 
@@ -111,7 +112,7 @@ const CustomDrawerComponent = props => (
 
 const TabScreens = createDrawerNavigator(
   {
-    Home: HomeNavigation,
+    Homepage: HomeNavigation,
     Safety: SafeNavigation,
     EquakeMap: EarthquakeMapStack,
     HEquake: HistoricalEquakeStack,

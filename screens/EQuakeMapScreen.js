@@ -34,6 +34,9 @@ const data = {
   Shaking: "No Shaking at your location"
 }
 export default class EQuakeMapScreen extends React.Component {
+  static navigationOptions = {
+		header: null
+	};
   constructor(props) {
     super(props)
     this.state = {
@@ -42,10 +45,10 @@ export default class EQuakeMapScreen extends React.Component {
     };
   }
 
-  componentDidMount() {
-    //client = EQuakeRestClient
-    //client.post(ApiEndpoints.)
-  }
+  // componentDidMount() {
+  //   //client = EQuakeRestClient
+  //   //client.post(ApiEndpoints.)
+  // }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
@@ -175,7 +178,7 @@ export default class EQuakeMapScreen extends React.Component {
               </View>
             </View>
 
-            <View style={{ width: "25%" }}>
+            <View style={styles.thirdMain}>
               <View >
                 <Text style={styles.textStyle}>Tsunami:</Text>
                 <Text style={styles.textStyle}>{data.Tsunami}</Text>
@@ -217,7 +220,10 @@ const styles = StyleSheet.create({
   },
   firstLayer: {
     height: "100%",
-    width: "49%"
+    width: "49%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   firstLayerMiddle:
   {
@@ -240,12 +246,18 @@ const styles = StyleSheet.create({
   },
   secondLayerMiddle: {
     height: "50%",
-    width: "100%"
+    width: "100%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   thirdMain: {
     borderRightWidth: 2,
     borderColor: 'black',
-    width: "25%"
+    width: "25%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
   ,
   submit: {
