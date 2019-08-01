@@ -1,9 +1,10 @@
 import React from "react";
 import Ionicons from "react-native-ionicons";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ScrollView, PermissionsAndroid, RefreshControl } from "react-native";
 import Icon from "react-native-ionicons";
 import { Button } from "react-native-elements";
 import MenuSearchComponent from "../components/MenuSearchComponent";
+import {getWeatherData} from '../communication/ApiEndpoints';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -14,43 +15,118 @@ export default class HomeScreen extends React.Component {
     this.state = {
       latitude: null,
       longitude: null,
-      error: null
+      error: null,
+      refresh: false,
+      city: '-',
+      temp : 0
     };
+
+    this.requestLocationPermission = this.requestLocationPermission.bind(this);
+    this.setCityTemp = this.setCityTemp.bind(this);
+    // this.refreshCurrentPos = this.refreshCurrentPos.bind(this);
   }
 
-  //componentDidMount() {
-  //  this.watchId = navigator.geolocation.watchPosition(
-  //  (position) => {
-  //  this.setState({
-  //  latitude: position.coords.latitude,
-  //longitude: position.coords.longitude,
-  //error: null,
-  //});
-  //},
-  //(error) => this.setState({ error: error.message }),
-  //{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
-  // );
-  //}
+  requestLocationPermission = async () => {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'QuakeZone Permission',
+          message:
+            'QuakeZone needs access to your Location ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      return new Promise((resolve, reject) => {
+            this.watchId = navigator.geolocation.getCurrentPosition( position => {
+              getWeatherData(position.coords.latitude, position.coords.longitude)
+              .then(res => {
+                this.setState({
+                  ...this.state,
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  refresh: false
+                }, () => {
+                  // console.log(this.state);
+                  this.setCityTemp(res);
+                })
+              });
+              
+            }, (error) => {
+              this.setState({
+                ...this.state,
+                error: error.message
+              })
+            }, );
+          // })
+          
+        // }else{
+        //   console.lwarn('Error');
+        // }
+      })
+  }
 
-  //  componentWillUnmount() {
-  //  navigator.geolocation.clearWatch(this.watchId);
-  //}
+  refreshCurrentPos = async () => {
+    try{
+      navigator.geolocation.getCurrentPosition((pos) => {
+        getWeatherData(pos.coords.latitude, pos.coords.longitude)
+        .then(res => {
+          console.log(res);
+          this.setState({
+            ...this.state,
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            refresh: false
+          }, () => {
+            this.setCityTemp(res);
+          })
+        });
+      })
+    }catch(err){
+      console.warn(err);
+    }
+  }
+
+  setCityTemp = (data) => {
+    // console.log(data);
+    this.setState({
+      ...this.state,
+      city: data.city,
+      temp: data.observation[0].temperature
+    })
+  }
+
+  componentDidMount() {
+    this.requestLocationPermission();
+  }
+
+  componentWillUnmount() {
+   navigator.geolocation.clearWatch(this.watchId);
+  }
 
   render() {
 
-    console.log('asdadasd');
+    // console.log('asdadasd');
     return (
-      // <ScrollView style={{height:'100%'}} contentContainerStyle={{flexGrow:1}}>
+      <ScrollView style={{height:'100%',}} contentContainerStyle={{flexGrow:1}}
+      refreshControl={
+        <RefreshControl 
+        refreshing={this.state.refresh}
+        onRefresh={() => this.refreshCurrentPos()}
+        />
+      }
+      >
       <View style={styles.wraps}>
       
       
-        {Platform.OS !== 'ios' && (
+        {/* {Platform.OS !== 'ios' && (
           <MenuSearchComponent
           onMenuClick={() => {
             this.props.navigation.toggleDrawer();
           }}
         />
-        )}
+        )} */}
         
         
         <View style={styles.Fourty}>
@@ -64,11 +140,11 @@ export default class HomeScreen extends React.Component {
                 source={require("../assets/rain.png")}
                 style={{ marginBottom: 7, height: "50%", width: "50%" }}
               />
-              <Text style={styles.TempText}>20º C</Text>
+              <Text style={styles.TempText}>{this.state.temp}º C</Text>
             </View>
 
-            <View style={{ alignSelf: "flex-end", width: "45%" }}>
-              <Text style={styles.City}>Bandung</Text>
+            <View style={{ marginBottom: 7, alignSelf: "flex-end", width: "45%" }}>
+              <Text style={styles.City}>{this.state.city}</Text>
             </View>
           </View>
         </View>
@@ -81,7 +157,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.overlayMiddle}>
             <View style={styles.InnerMiddle}>
               <Text style={styles.MiddleText}>
-                Tectonic earthquae just happened 5M, in the city of Solok{" "}
+                Tectonic Earthquake just happened 5M, in the city of Solok{" "}
               </Text>
 
               <View style={styles.TextRaw}>
@@ -162,7 +238,7 @@ export default class HomeScreen extends React.Component {
         </View>
       
       </View>
-      // </ScrollView>
+      </ScrollView>
     );
   }
 }
@@ -264,7 +340,7 @@ const styles = StyleSheet.create({
   },
   InnerMiddle: {
     marginLeft: 4,
-    bottom: 0,
+    bottom: 10,
     position: "absolute",
     height: "50%",
     width: "100%"
