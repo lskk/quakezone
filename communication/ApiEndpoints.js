@@ -18,6 +18,16 @@ export const getWeatherData = (lat, lon) => {
     })
 }
 
+export const getBMKGData = () => {
+    return new Promise(resolve => {
+        axios.get('http://data.bmkg.go.id/gempadirasakan.xml')
+        .then(respon => {
+            resolve(respon);
+        })
+    })
+    
+}
+
 // module.exports = {
 //     getWeatherData
 // }

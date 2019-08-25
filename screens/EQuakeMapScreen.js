@@ -2,7 +2,7 @@ import React from "react";
 import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MapboxGL from '@mapbox/react-native-mapbox-gl';
 import MenuSearchComponent from '../components/MenuSearchComponent'
-import EQuakeRestClient from '../communication/EQuakeRestClient'
+// import EQuakeRestClient from '../communication/EQuakeRestClient'
 //import ApiEndpoints from '../communication/ApiEndpoints'
 
 YOUR_ACCES_TOKEN = "pk.eyJ1IjoiaGVuZHlpcmF3YW4iLCJhIjoiY2l3cnpvNmRqMTVjcDJ6cXpxb2UxejVnbSJ9.ePnKula0P6I1BhiySWkG1w"

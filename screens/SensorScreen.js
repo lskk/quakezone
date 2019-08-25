@@ -4,26 +4,46 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   TouchableHighlight,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  RefreshControl
 } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import MenuSearchComponent from "../components/MenuSearchComponent";
-import { ScrollView } from "react-native-gesture-handler";
+// import { ScrollView } from "react-native-gesture-handler";
 import { Waveform } from "../components/Waveform";
 import { BarChart, Grid } from "react-native-svg-charts";
 import {
   accelerometer,
   gyroscope,
+  magenetometer,
+  barometer,
   setUpdateIntervalForType,
   SensorTypes
 } from "react-native-sensors";
+import { withNavigation, withNavigationFocus } from 'react-navigation';
 import { map, filter } from "rxjs/operators";
+import Store from '../storage/Store';
 
-export default class SensorScreen extends React.PureComponent {
+const deviceWidth = 400;
+const deviceHeight = 400;
+
+const imageWidth = 8 * deviceWidth;
+const imageHeight = deviceHeight;
+
+const middleOfTheScreenX = (imageWidth - deviceWidth) / 2;
+
+class SensorScreen extends React.PureComponent {
+  static navigationOptions = {
+		header: null
+	};
   constructor(props) {
     super(props);
+    
     // const accels = [
     //   50,
     //   10,
@@ -61,41 +81,60 @@ export default class SensorScreen extends React.PureComponent {
     //   -80
     // ];
     const accels = new Array(100).fill(0);
+    const gyro = new Array(100).fill(0);
+    const magnetometer = new Array(100).fill(0);
+
     this.state = {
-      accels: accels
+      accels: accels,
+      gyro: gyro,
+      magnetometer: magnetometer,
+      sensorStatus: false,
+      refresh: false,
     };
   }
 
   componentDidMount() {
-    setUpdateIntervalForType(SensorTypes.accelerometer, 100); // defaults to 100ms
-    this._accelSub = accelerometer
-      //   .pipe(
-      //     map(({ x, y, z }) => x + y + z),
-      //     filter(speed => speed > 20)
-      //   )
-      .subscribe(
-        ({ x, y, z }) => {
-          const accels = [...this.state.accels];
-        //   console.log(`You moved your phone with`, x, y, z);
-          accels.shift();
-          const mean = (x + y + z) / 3.0;
-          accels.push(mean);
-          this.setState({ accels: accels });
-        //   console.log(`accels=`, this.state.accels);
-        },
-        error => {
-          console.error("Accelerometer is not available");
-        }
-      );
+    this.willFocus = this.props.navigation.addListener('willFocus', () => {
+      // do something
+      this.subscribeSensor();
+      Store.on('gyro', (gyro) => {
+        // console.log('dataGyro', gyro);
+        this.setState({
+          gyro: gyro
+        })
+      })
+      Store.on('accels', (accels) => {
+        // console.log('dataAccels', accels);
+        this.setState({
+          accels: accels
+        })
+      })
+      Store.on('magnetometer', (magnetometer) => {
+        this.setState({
+          magnetometer: magnetometer
+        })
+      });
+    });
+    
+
+  }
+
+  subscribeSensor = () => {
+    this.setState({
+      refresh: false
+    }, () => {
+      Store.subscribeSensor()
+      Store.sensor = true;
+    })
   }
 
   componentWillUnmount() {
-    if (this._accelSub) {
-      this._accelSub.unsubscribe();
-    }
+    console.log('Component Unmount');
   }
 
   render() {
+
+
     const waveform = {
       width: 10,
       height: 140,
@@ -103,6 +142,15 @@ export default class SensorScreen extends React.PureComponent {
     };
     const fill = "rgb(134, 65, 244)";
     return (
+      <SafeAreaView>
+        <ScrollView 
+        // refreshControl={
+        //   <RefreshControl 
+        //   refreshing={this.state.refresh}
+        //   onRefresh={() => this.subscribeSensor()}
+        //   />
+        // }
+        >
       <View style={styles.container}>
         <MenuSearchComponent
           onMenuClick={() => {
@@ -126,8 +174,31 @@ export default class SensorScreen extends React.PureComponent {
           >
             <Grid />
           </BarChart>
+
+          <BarChart
+            style={{ height: 200 }}
+            data={this.state.gyro}
+            svg={{ fill }}
+            contentInset={{ top: 30, bottom: 30 }}
+            yMin={-10} yMax={+10}
+          >
+            <Grid />
+          </BarChart>
+
+          <BarChart
+            style={{ height: 200 }}
+            data={this.state.magnetometer}
+            svg={{ fill }}
+            contentInset={{ top: 30, bottom: 30 }}
+            yMin={-10} yMax={+10}
+          >
+            <Grid />
+          </BarChart>
         </View>
+
       </View>
+      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -138,7 +209,17 @@ const styles = StyleSheet.create({
   },
   waveformContainer: {
     flex: 1
+  },
+  image: {
+    // position: "absolute",
+    top: 0,
+    left: 0,
+    height: 400,
+    width: 400
   }
+
 });
 
 const { width, height } = Dimensions.get("window");
+
+export default withNavigationFocus(SensorScreen);

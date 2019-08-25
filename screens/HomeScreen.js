@@ -1,12 +1,15 @@
 import React from "react";
 import Ionicons from "react-native-ionicons";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ScrollView, PermissionsAndroid, RefreshControl } from "react-native";
-import Icon from "react-native-ionicons";
-import { Button } from "react-native-elements";
-import MenuSearchComponent from "../components/MenuSearchComponent";
-import {getWeatherData} from '../communication/ApiEndpoints';
+import Geolocation from '@react-native-community/geolocation';
+// import Icon from "react-native-ionicons";
+// import { Button } from "react-native-elements";
+// import MenuSearchComponent from "../components/MenuSearchComponent";
+import {getWeatherData, getBMKGData} from '../communication/ApiEndpoints';
+import { withNavigationFocus } from 'react-navigation'; 
+const parseString = require('react-native-xml2js').parseString;
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = {
 		header: null
 	};
@@ -27,6 +30,8 @@ export default class HomeScreen extends React.Component {
   }
 
   requestLocationPermission = async () => {
+    if(Platform.OS !== 'ios'){
+      console.log('Android');
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
@@ -38,38 +43,48 @@ export default class HomeScreen extends React.Component {
           buttonPositive: 'OK',
         },
       );
-      return new Promise((resolve, reject) => {
-            this.watchId = navigator.geolocation.getCurrentPosition( position => {
-              getWeatherData(position.coords.latitude, position.coords.longitude)
-              .then(res => {
-                this.setState({
-                  ...this.state,
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  refresh: false
-                }, () => {
-                  // console.log(this.state);
-                  this.setCityTemp(res);
-                })
-              });
-              
-            }, (error) => {
+      if(granted === PermissionsAndroid.RESULTS.GRANTED){
+        this.getLocation();
+      }else{
+        alert('Error');
+      }
+      
+    }else{
+      console.log('ios');
+      this.getLocation();
+    }
+  }
+
+  getLocation = () => {
+    return new Promise((resolve, reject) => {
+          this.watchId = Geolocation.getCurrentPosition( position => {
+            getWeatherData(position.coords.latitude, position.coords.longitude)
+            .then(res => {
               this.setState({
                 ...this.state,
-                error: error.message
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                refresh: false
+              }, () => {
+                this.setCityTemp(res);
               })
-            }, );
-          // })
-          
-        // }else{
-        //   console.lwarn('Error');
-        // }
-      })
+            });
+            
+          }, (error) => {
+            this.setState({
+              ...this.state,
+              error: error.message
+            })
+          }, 
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+          );
+
+    })
   }
 
   refreshCurrentPos = async () => {
     try{
-      navigator.geolocation.getCurrentPosition((pos) => {
+      Geolocation.getCurrentPosition((pos) => {
         getWeatherData(pos.coords.latitude, pos.coords.longitude)
         .then(res => {
           console.log(res);
@@ -89,7 +104,6 @@ export default class HomeScreen extends React.Component {
   }
 
   setCityTemp = (data) => {
-    // console.log(data);
     this.setState({
       ...this.state,
       city: data.city,
@@ -98,11 +112,19 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    getBMKGData().then(data => {
+      console.log(data);
+      parseString(data.data, function (err, result) {
+        var gempa = result.Infogempa.Gempa;
+        // console.log(gempa.length-1);
+        // console.log(JSON.stringify(result, null, 2))
+      });
+    });
     this.requestLocationPermission();
   }
 
   componentWillUnmount() {
-   navigator.geolocation.clearWatch(this.watchId);
+   Geolocation.clearWatch(this.watchId);
   }
 
   render() {
@@ -472,3 +494,5 @@ const styles = StyleSheet.create({
     fontWeight:'bold'
   }
 });
+
+export default withNavigationFocus(HomeScreen);

@@ -3,6 +3,9 @@ import { StyleSheet, Text, View } from "react-native";
 import MenuSearchComponent from "../components/MenuSearchComponent";
 
 export default class EarthquakeDetailsScreen extends React.Component {
+  static navigationOptions = {
+		header: null
+	};
   constructor(props) {
     super(props);
   }

@@ -3,8 +3,13 @@ import Ionicons from "react-native-ionicons";
 import {
   createDrawerNavigator,
   createStackNavigator,
+  createSwitchNavigator,
+  DrawerNavigator,
+  StackNavigator,
+  SwitchNavigator,
   DrawerItems,
-  createBottomTabNavigator
+  createAppContainer,
+  withNavigation
 } from "react-navigation";
 import { Text, View, SafeAreaView, ScrollView, Image, Platform } from "react-native";
 
@@ -13,8 +18,9 @@ import EQuakeMapScreen from "../screens/EQuakeMapScreen";
 import HistoricalEquake from "../screens/HistoricalEarthquakesScreen";
 import EarthquakeDetailsScreen from "../screens/EarthquakeDetailsScreen";
 import SafetyScreen from "../screens/SafetyScreen";
-import Icon from "react-native-ionicons";
+// import Icon from "react-native-ionicons";
 import SensorScreen from "../screens/SensorScreen";
+import SettingScreen from "../screens/SettingScreen";
 // Importing navigations
 
 const HomeNavigation = createStackNavigator({
@@ -79,12 +85,28 @@ SafeNavigation.navigationOptions = {
 
 const SensorNavigation = createStackNavigator({
   Sensor: SensorScreen
+}, {
+  resetOnBlur: true,
 });
 
 SensorNavigation.navigationOptions = {
   drawerLabel: "Sensor",
   drawerIcon: ({ focused, tintColor }) => {
     const iconName = "wifi";
+    return <Ionicons name={iconName} size={25} color={tintColor} />;
+  }
+};
+
+const SettingsNavigation = createStackNavigator({
+  Setting: SettingScreen
+}, {
+  resetOnBlur: true,
+});
+
+SettingsNavigation.navigationOptions = {
+  drawerLabel: "Setting",
+  drawerIcon: ({ focused, tintColor }) => {
+    const iconName = "settings";
     return <Ionicons name={iconName} size={25} color={tintColor} />;
   }
 };
@@ -112,16 +134,21 @@ const CustomDrawerComponent = props => (
 
 const TabScreens = createDrawerNavigator(
   {
-    Homepage: HomeNavigation,
-    Safety: SafeNavigation,
-    EquakeMap: EarthquakeMapStack,
-    HEquake: HistoricalEquakeStack,
-    Detail: EarthquakeDetails,
-    Sensor: SensorNavigation,
+    Homepage: {screen: HomeNavigation},
+    Safety: {screen: SafeNavigation},
+    EquakeMap: {screen: EarthquakeMapStack},
+    HEquake: {screen: HistoricalEquakeStack},
+    Detail: {screen: EarthquakeDetails},
+    Sensor: {screen: SensorNavigation},
+    Setting: {screen: SettingsNavigation}
   },
   {
+    initialRouteName: 'Homepage',
+    resetOnBlur: false,
+    
     contentComponent: CustomDrawerComponent
   }
 );
 
 export default TabScreens;
+// export default createAppContainer(TabScreens);
